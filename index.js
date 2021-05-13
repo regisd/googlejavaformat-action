@@ -144,7 +144,14 @@ async function run() {
         // Execute Google Java Format with provided arguments
         const args = core.getInput('args').split(' ');
         core.debug(`Arguments: ${args}`);
-        const files = await (await glob.create(core.getInput('files'))).glob();
+        const files = core.getInput('files');
+        const nl_separated_files;
+        if (files instanceof Array) {
+            nl_separated_files = files.join('\n');
+        } else {
+            nl_separated_files = files;
+        }
+        const files = await (await glob.create(nl_separated_files)).glob();
         core.debug(`Files:`);
         for (const file of files) {
             core.debug(`* ${file}`);
